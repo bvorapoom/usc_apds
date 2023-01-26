@@ -1,0 +1,116 @@
+$primarycolor: rgb(16, 111, 171);
+
+.jsTree {
+  width: max-content;
+  .itemParent { /* div. more down under */
+    transition: all 0.3s ease-in;
+    padding: 2px 0px;
+    display: flex;
+
+    &:hover {
+      background-color: rgb(209, 209, 209);
+    }
+
+    p {
+      margin: 0px;
+      flex-grow: 1;
+    }
+
+    .afterIcon {
+      display: inline-block;
+      flex-shrink: 0;
+      width: 19px;
+      height: 19px;
+      margin: 0px 4px;
+      background: url('icons/edit-black.svg');
+      background-size: 12px 12px;
+      background-repeat: no-repeat;
+      background-position: center center;
+      cursor: pointer;
+      transition: opacity 0.3s ease-out;
+      opacity: 0.0;
+    }
+    &:hover .afterIcon { opacity: 1.0 }
+  }
+  .childGroup { /* ul */
+    padding: 0px 0px 0px 12px;
+    margin: 0;
+  }
+  .item { /* li */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    transition: all 0.3s ease-in;
+  }
+
+}
+
+.jsTree .itemParent .preIcon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 19px;
+  height: 19px;
+  margin: 0px 4px;
+  background-size: 14px 14px !important;
+  background-repeat: no-repeat !important;
+  background-position: center center !important;
+  &.arrowDown {
+    cursor: pointer;
+    background: url('icons/arrowdown-black.svg');
+    transition: transform 0.3s ease-out;
+    &.arrowRotate {
+      transform: rotate(-90deg);
+    }
+  }
+
+  &.checkboxIcon {
+    cursor: pointer;
+    background: url('icons/notselected-black.svg');
+
+    &.checked {
+      background: url('icons/selected-black.svg');
+    }
+  }
+
+  &.radiobtnIcon {
+    cursor: pointer;
+    background: url('icons/radionotselected-black.svg');
+
+    &.checked {
+      background: url('icons/radioselected-black.svg');
+    }
+  }
+
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .jsTree .itemParent .preIcon.checkboxIcon:hover {
+    background: url('icons/selected-black.svg');
+  }
+
+  .jsTree .itemParent .preIcon.radiobtnIcon:hover {
+    background: url('icons/radioselected-black.svg');
+  }
+}
+
+.jsTreeContextMenu {
+  width:max-content;
+  display: none;
+  position: fixed;
+  border-radius: 1px;
+  overflow:hidden;
+  background: white;
+  border: 1px solid $primarycolor;
+  box-sizing: border-box;
+
+  p {
+    margin: 0;
+    padding: 4px 8px;
+    transition: all 0.3s ease-in;
+    background: white;
+
+    &:hover {
+      background: #eee;
+    }
+  }
+}

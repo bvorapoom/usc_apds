@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Project Group40</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+    <script type="text/javascript" src="/static/jquery-3.6.0.js"></script>
+    <script type="text/javascript" src="/static/index.js"></script>
+    <link href="https://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/dinamp.treeeditor.js"></script>
+    <link rel="stylesheet" href="/static/css/treeeditor.css" />
+</head>
+<body>
+    <div class = "header">
+        <div class="header_title">Car Accident Prediction</div>
+        <div class="header_text">
+            <p>This web interface showcases our project results whose objective is to analyze car accidents based on several data fields through regression analysis. The datasets used for analysis are stored on 3 emulated database systems: Firebase, MySQL, and MongoDB. Here, we also provide a section to interact with the databases through terminal commands, navigate through our databases, and perform search queries.
+            </p>
+            <p>Our web interface consists of three tabs:</p>
+            <p>1. Terminal commands and Navigation: modify the databases using terminal commands and show the structure of each database</p>
+            <p>2. Search function: search our databases using SQL queries</p>
+            <p>3. Analytics function: show outputs from regression analysis and allows to predict based on input attributes</p>
+        </div>
+    </div>
+    <div class = "main">
+        <div id="wrap">
+            <div class="tab-title" id="tab1" onclick="show(3,1)">Terminal Command & Navigation</div>
+            <div class="tab-title" id="tab2" onclick="show(3,2)">Search</div>
+            <div class="tab-title" id="tab3" onclick="show(3,3)">Analytics</div>
+        </div>
+        <div id="content">
+            <div class="tab-content" id="content1" style="display: none">
+                <div class="terminal-command">
+                    <div class="title-tc">Terminal Command</div>
+                    <div class="text-tc">
+                        <p>There are 7 different terminal commands that can be used on each of the three databases. The definition and the syntax of each command are shown below:</p>
+                        <p>1. Make directory: ‘mkdir &lt; path_of_dir &gt;’ e.g. ‘mkdir /data’ </p>
+                        <p>2. List content: ‘ls &lt; path_of_dir &gt;’ e.g. ‘ls /data’</p>
+                        <p>3. Display content: cat &lt; path_of_file &gt;’ e.g. ‘cat /data/file1.csv’</p>
+                        <p>4. Remove a file from the system: rm &lt; path_of_file &gt;’ e.g. ‘rm /data/file1.csv’</p>
+                        <p>5. Upload a file to the system: ‘put &lt;path_of_file_to_upload &gt; &lt;dir_on_db_to_put &gt; &lt;num_partitions &gt;(optional) &lt;col_to_partition &gt;(optional)’ e.g. ‘’put local/data1.csv /data/ 6 year'</p>
+                        <p>6. Get the partition locations of a file: ‘getPartitionLocations &lt;path_of_file&gt;’ e.g. ‘getPartitionLocations data/fille1.csv’</p>
+                        <p>7. Read a partition of a file: ‘readPartition &lt;path_of_file&gt; &lt;num_partition&gt;’ e.g. ‘readPartition data/file1.csv 3’</p>
+                    </div>
+                    <div class="dropdown-database-tc">
+                        <label for="search-db-tc">Select database:</label>
+                        <select id="search-db-tc">
+                            <option value="firebase">Firebase</option>
+                            <option value="mysql">MySQL</option>
+                            <option value="mongodb">MongoDB</option>
+                        </select>
+                    </div>
+                    <div method="get" class="input-form-tc" >
+                        <label>Enter terminal command:</label>
+                        <input type="text" id="tcInputValue" name="inputValue" placeholder="Enter terminal command" required>
+                    </div>
+                    <div id="terminal-command-result" class="terminal-command-result">
+                        <label>Terminal:</label>
+                        <div class="resultBox" id="queryResult">terminal output</div>
+                    </div>
+                    <button id="testtest2" onclick="terminalCommand()">Get Output</button>
+                </div>
+                <div class="navigator">
+                    <div class="title-tc">Navigator</div>
+                    <div class="text-nav">
+                        <p>
+                            This section shows the structure of our databases in a tree format and allows you to interactively navigate through the directories. How it works is as follows:
+                        </p>
+                        <p>1. Select the database you want to navigate</p>
+                        <p>2. Click on the refresh button. This will get the updated structure of the database</p>
+                        <p>3. Enjoy navigating through the interactive structure of our database!</p>
+                    </div>
+                     <div class="navigator-dropdown">
+                        <label for="search-db-nav">Select database:</label>
+                        <select id="search-db-nav">
+                            <option value="firebase">Firebase</option>
+                            <option value="mysql">MySQL</option>
+                            <option value="mongodb">MongoDB</option>
+                        </select>
+                         <button id="refresh" onclick="getStructure()">Refresh</button>
+                    </div>
+                    <div class="container">
+                        <p class="sncdOutput"></p>
+                        <div class="scndTree"></div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="tab-content" id="content2" style="display: none">
+                <div class="search-function">
+                    <div class="title">Search Function</div>
+                    <div class="dropdown-database-search">
+                        <label for="search-db-search">Select database:</label>
+                        <select id="search-db-search">
+                            <option value="firebase">Firebase</option>
+                            <option value="mysql">MySQL</option>
+                            <option value="mongodb">MongoDB</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-mr">
+                        <label for="search-mr">Select map-reduce method:</label>
+                        <select id="search-mr">
+                            <option value="pyspark">Spark</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <form method="get" class="input-form" >
+                        <label>Enter search query:</label>
+                        <input type="text" id="inputValue" name="inputValue" placeholder="Enter query" required>
+                    </form>
+                    <div id="search-result" class="search-result">
+                        <label>Your query result:</label>
+                        <div class="resultBox" id="queryResult">Your query result</div>
+                    </div>
+                    <button id="testtest" onclick="searchFunction()">Search</button>
+                </div>
+                <div class="search-text">
+                    <p>
+                        Our search function allows you to search whatever you want to see on our databases using SQL queries. How it works is as follows:
+                    </p>
+                    <p>1. Select the database you want to search on</p>
+                    <p>2. Select the method of map-reduce in order to get the data</p>
+                    <p>3. Input the SQL query</p>
+                </div>
+                <div class="search-text-second">
+                    <p>There are 5 tables available: table_accident, table_employment, table_gdp, table_population, and table_weather</p>
+                    <p>Examples of queries are as follows:</p>
+                </div>
+                <div class="search-text-third">
+                    <p>a. select state, gdp_millions from table_gdp where year = 2018 and industry = "education" order by gdp_millions desc</p>
+                    <p>b. select state, sum(count_accidents) as total_accidents from table_accident group by state order by 2 desc limit 5</p>
+                    <p>c. select a.state, sum(accidents)/sum(population) as accidents_per_capita
+from (select postal_abbr, year, state, sum(count_accidents) as accidents from table_accident where year = 2019 group by 1, 2, 3) a
+left join (select postal_abbr, year, state, sum(pop) as population from table_population where year = 2019 group by 1, 2, 3) p
+on a.postal_abbr = p.postal_abbr and a.year = p.year group by 1 order by 2 desc
+</p>
+                </div>
+            </div>
+            <div class="tab-content" id="content3" style="display: none">
+                <div>
+                    <label>%Employment Accommodation & Food</label>
+                    <input type="text" attr="numEmp_accommodation_food" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment Administrative Support</label>
+                    <input type="text" attr="numEmp_administrative_support" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment construction</label>
+                    <input type="text" attr="numEmp_construction" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment education</label>
+                    <input type="text" attr="numEmp_education" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment entertainment</label>
+                    <input type="text" attr="numEmp_entertainment" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment farm</label>
+                    <input type="text" attr="numEmp_farm" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment federal civilian</label>
+                    <input type="text" attr="numEmp_federal_civilian" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment finance</label>
+                    <input type="text" attr="numEmp_finance" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment forestry</label>
+                    <input type="text" attr="numEmp_forestry" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment healthcare</label>
+                    <input type="text" attr="numEmp_healthcare" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment information</label>
+                    <input type="text" attr="numEmp_information" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment management</label>
+                    <input type="text" attr="numEmp_management" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment manufacturing</label>
+                    <input type="text" attr="numEmp_manufacturing" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment military</label>
+                    <input type="text" attr="numEmp_military" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment mining</label>
+                    <input type="text" attr="numEmp_mining" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment professional</label>
+                    <input type="text" attr="numEmp_professional" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment real estate</label>
+                    <input type="text" attr="numEmp_real_estate" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment retail trade</label>
+                    <input type="text" attr="numEmp_retail_trade" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment state local</label>
+                    <input type="text" attr="numEmp_state_local" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment transportation</label>
+                    <input type="text" attr="numEmp_transportation" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment utilities</label>
+                    <input type="text" attr="numEmp_utilities" class="input-var">
+                </div>
+                <div>
+                    <label>%Employment wholesale trade</label>
+                    <input type="text" attr="numEmp_wholesale_trade" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP agriculture</label>
+                    <input type="text" attr="gdp_agriculture" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP construction</label>
+                    <input type="text" attr="gdp_construction" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP education</label>
+                    <input type="text" attr="gdp_education" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP entertainment</label>
+                    <input type="text" attr="gdp_entertainment" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP finance</label>
+                    <input type="text" attr="gdp_finance" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP government</label>
+                    <input type="text" attr="gdp_government" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP information</label>
+                    <input type="text" attr="gdp_information" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP manufacturing</label>
+                    <input type="text" attr="gdp_manufacturing" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP mining</label>
+                    <input type="text" attr="gdp_mining" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP retail trade</label>
+                    <input type="text" attr="gdp_retail_trade" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP services</label>
+                    <input type="text" attr="gdp_services" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP transportation</label>
+                    <input type="text" attr="gdp_transportation" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP utilities</label>
+                    <input type="text" attr="gdp_utilities" class="input-var">
+                </div>
+                <div>
+                    <label>%GDP wholesale trade</label>
+                    <input type="text" attr="gdp_wholesale_trade" class="input-var">
+                </div>
+                <div>
+                    <label>Average age</label>
+                    <input type="text" attr="avg_age" class="input-var">
+                </div>
+                <div>
+                    <label>%Population female</label>
+                    <input type="text" attr="pop_sex_F" class="input-var">
+                </div>
+                <div>
+                    <label>%Population white</label>
+                    <input type="text" attr="pop_race_1" class="input-var">
+                </div>
+                <div>
+                    <label>%Population black</label>
+                    <input type="text" attr="pop_race_2" class="input-var">
+                </div>
+                <div>
+                    <label>%Population american indian & alaskan</label>
+                    <input type="text" attr="pop_race_3" class="input-var">
+                </div>
+                <div>
+                    <label>%Population asian</label>
+                    <input type="text" attr="pop_race_4" class="input-var">
+                </div>
+                <div>
+                    <label>%Population hawaiian & islander</label>
+                    <input type="text" attr="pop_race_5" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of cold</label>
+                    <input type="text" attr="weather_Cold" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of fog</label>
+                    <input type="text" attr="weather_Fog" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of hail</label>
+                    <input type="text" attr="weather_Hail" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of precipitation</label>
+                    <input type="text" attr="weather_Precipitation" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of rain</label>
+                    <input type="text" attr="weather_Rain" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of snow</label>
+                    <input type="text" attr="weather_Snow" class="input-var">
+                </div>
+                <div>
+                    <label>#Days of storm</label>
+                    <input type="text" attr="weather_Storm" class="input-var">
+                </div>
+
+
+
+
+                <div class="dropdown-algo">
+                    <label for="algo">Select regression algorithm to predict:</label>
+                    <select id="algo">
+                        <option value="linreg">Linear Regression</option>
+                        <option value="ridge">Ridge Regression</option>
+                        <option value="lasso">Lasso Regression</option>
+                        <option value="poly">Polynomial Regression</option>
+                        <option value="tree">Decision Tree Regression</option>
+                        <option value="linsvm">Linear Support Vector Regression</option>
+                        <option value="svm">Support Vector Regression</option>
+                        <option value="knn">KNN Regression</option>
+                        <option value="rf">Random Forest Regression</option>
+                    </select>
+                </div>
+                <button id="analytics-predict-btn" onclick="analyticsPredict()">PREDICT</button>
+                <div id="analytics-result">
+                    <label>Regression prediction results:</label>
+                    <div id="analytics-result-box"></div>
+                </div>
+                 <div class="analytics-text">
+                    <p>The prediction feature allows you to predict the car accident rates of a state based on the models we created.</p>
+                    <p>There are 50 different attributes (you are not required to input all of them). These 50 attributes are mainly classified into 4 groups</p>
+                </div>
+                <div class="analytics-text-second">
+                    <p>%Employment: percentage of people in the state employed in the industry, e.g. %Employment education = 0.15</p>
+                    <p>%GDP: percentage of the state’s GDP the industry contributed, e.g. %GDP finance = 0.3</p>
+                    <p>%Population: percentage of population in the state with the given condition, e.g. %Population white = 0.4</p>
+                    <p>#Days of weather condition: Number of days that the weather condition occurs in a month, e.g. #Days rain = 10</p>
+                </div>
+                <div class="analytics-text-third">
+                    <p>You can specify which regression algorithm you want to use for the prediction</p>
+                    <p>The final result is the predicted number of car accidents per 10,000 population in 1 month, based on the attributed inputted.</p>
+                </div>
+                <div class="analytics-text-forth">
+                    <p>Our analytics function is to predict car accidents based on employment, population, weather, and GDP data using nine different regression algorithms. The RMSE we achieved for these algorithms are as follows:
+</p>
+                </div>
+                <div class="analytics-text-fifth">
+                    <p>Linear regression: 1.44</p>
+                    <p>Ridge regression: 1.45</p>
+                    <p>Lasso regression: 1.57</p>
+                    <p>Polynomial regression: 1.38</p>
+                    <p>Decision tree regression: 1.33</p>
+                    <p>Linear support vector regression: 1.50</p>
+                    <p>Support vector regression using RBF kernel: 1.32</p>
+                    <p>K-nearest neighbor regression: 1.38</p>
+                    <p>Random forest regression: 1.22</p>
+                </div>
+                <div class="analytics-text-sixth">
+                    <p>Findings: these are the top 5 attributes that have the most effects on the car accidents rate based on our regression analysis using linear regression.</p>
+                </div>
+                <div class="analytics-text-seventh">
+                    <p>numEmp_professional (coef = -5.1): percentage of employment on professional, scientific, and technical services industry</p>
+                    <p>numEmp_manufacturing (coef = -4.2): percentage of employment on manufacturing industry</p>
+                    <p>gdp_government (coef = 4.0): percentage of GDP contributed by government sector
+numEmp_federal_civilian (coef = -3.7): percentage of employment on federal civilian industry
+</p>
+                    <p>pop_race_1 (coef = -3.5): percentage of white population</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- -->
+<script type="text/javascript">
+      var treeOne, treeScnd, treeThird;
+      var data = [
+          {
+            title: "Data",
+            children: [
+              {
+                title:"Shelfs A",
+                children: [
+                  {title:"Shelf A1"},
+                  {title:"Shelf A2"},
+                  {title:"Shelf A3"},
+                  {title:"Shelf A4"}
+                ]
+              },
+              {
+                title:"Shelfs B",
+                children: [
+                  {title:"Shelf B1"},
+                  {title:"Shelf B2"}
+                ]
+              },
+              {title:"Ground"}
+            ]
+          }
+      ];
+
+      $(function(){
+        // treeOne = new DinampTreeEditor('.firstTree').setData(data);
+
+        treeScnd = new DinampTreeEditor('.scndTree').setData(data).set({
+          extended: false,
+          radios: true,
+          editable:false,
+          oncheck: function(state, text, path) {
+            $(".sncdOutput").text(path);
+          }
+        });
+
+         treeThird = new DinampTreeEditor('.thirdTree').setData(data).set({
+         checkboxes: true,
+         onchange: function(tree) {
+           $(".thirdOutput").text(JSON.stringify(tree.getData()));
+          }
+        });
+      });
+    </script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-1VDDWMRSTH"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-1VDDWMRSTH');
+</script>
+<script>
+try {
+  fetch(new Request("https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js", { method: 'HEAD', mode: 'no-cors' })).then(function(response) {
+    return true;
+  }).catch(function(e) {
+    var carbonScript = document.createElement("script");
+    carbonScript.src = "//cdn.carbonads.com/carbon.js?serve=CK7DKKQU&placement=wwwjqueryscriptnet";
+    carbonScript.id = "_carbonads_js";
+    document.getElementById("carbon-block").appendChild(carbonScript);
+  });
+} catch (error) {
+  console.log(error);
+}
+</script>
+</body>
+</html>
