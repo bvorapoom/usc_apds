@@ -1,0 +1,8 @@
+beautifulsoup4==4.11.2
+contractions==0.1.73
+gensim==4.3.0
+nltk==3.6.1
+numpy==1.24.1
+pandas==1.5.3
+scikit_learn==1.2.1
+torch==1.13.1
